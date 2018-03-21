@@ -32,3 +32,6 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+PuzzleProject/Library/
+PuzzleProject/Temp/
+PuzzleProject/UnityPackageManager/
