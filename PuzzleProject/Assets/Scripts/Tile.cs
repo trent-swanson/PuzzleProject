@@ -54,6 +54,10 @@ public class Tile : MonoBehaviour {
 				occupyingObject = hit.transform.gameObject;
 				occupyingObject.GetComponent<Player>().occupiedTile = this;
 			}
+			if (hit.transform.tag == "Enemy") {
+				occupyingObject = hit.transform.gameObject;
+				occupyingObject.GetComponent<Enemy>().occupiedTile = this;
+			}
 		}
 	}
 

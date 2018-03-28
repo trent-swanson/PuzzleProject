@@ -5,17 +5,21 @@ using UnityEngine;
 public class Player : CharacterController {
 
 	void Update() {
-		if (Input.GetKeyDown(KeyCode.W)) {
+		if (Input.GetKeyDown(KeyCode.W) && GameManager.playerTurn) {
 			MoveForward();
+			GameManager.playerTurn = false;
 		}
-		if (Input.GetKeyDown(KeyCode.S)) {
+		if (Input.GetKeyDown(KeyCode.S) && GameManager.playerTurn) {
 			MoveBack();
+			GameManager.playerTurn = false;
 		}
-		if (Input.GetKeyDown(KeyCode.A)) {
+		if (Input.GetKeyDown(KeyCode.A) && GameManager.playerTurn) {
 			MoveLeft();
+			GameManager.playerTurn = false;
 		}
-		if (Input.GetKeyDown(KeyCode.D)) {
+		if (Input.GetKeyDown(KeyCode.D) && GameManager.playerTurn) {
 			MoveRight();
+			GameManager.playerTurn = false;
 		}
 	}
 }
