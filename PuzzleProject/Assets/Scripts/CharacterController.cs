@@ -9,7 +9,7 @@ public class CharacterController : MonoBehaviour {
 	[Space]
 	public Tile occupiedTile;
 
-	bool isWalking = false;
+	public bool isWalking = false;
 
 	public void MoveForward() {
 		if (transform.position == occupiedTile.tilePosition) {
@@ -79,12 +79,33 @@ public class CharacterController : MonoBehaviour {
 		}
 	}
 
+	public void AttackPlayer(GameObject player) {
+		occupiedTile.occupyingObject = null;
+		StartCoroutine(MoveToPosition(this.transform, player.transform.position, moveSpeed, player));
+	}
+
 	public IEnumerator MoveToPosition(Transform transform, Vector3 position, float timeToMove) {
       	Vector3 currentPos = transform.position;
       	float t = 0f;
     	while (t < 1) {
         	t += Time.deltaTime / timeToMove;
             transform.position = Vector3.Lerp(currentPos, position, t);
+			if (t >= 1) {
+				GameManager.ChangeTurn();
+			}
+            yield return null;
+		}
+    }
+
+	public IEnumerator MoveToPosition(Transform transform, Vector3 position, float timeToMove, GameObject player) {
+      	Vector3 currentPos = transform.position;
+      	float t = 0f;
+    	while (t < 1) {
+        	t += Time.deltaTime / timeToMove;
+            transform.position = Vector3.Lerp(currentPos, position, t);
+			if (t >= 1) {
+				player.GetComponent<Player>().Die();
+			}
             yield return null;
 		}
     }

@@ -5,13 +5,23 @@ using UnityEngine.SceneManagement;
 
 public static class GameManager {
 
+	public delegate void UpdateTurnAction();
+    public static event UpdateTurnAction UpdateTurn;
+
 	public static int currentLevel = 1;
 	public static int selectedLevel = 1;
-	public static bool playerTurn = true;
+	public static bool playerTurn;
 
 	public static void GoToNextLevel() {
-		Debug.Log("yup");
 			currentLevel++;
 			SceneManager.LoadScene(1);
+	}
+
+	public static void ChangeTurn() {
+		playerTurn = !playerTurn;
+		if (!playerTurn) {
+			if (UpdateTurn != null)
+				UpdateTurn();
+		}
 	}
 }

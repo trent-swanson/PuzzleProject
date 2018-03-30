@@ -1,25 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : CharacterController {
 
+	Touch touchControls;
+
+	void Start() {
+		GameManager.playerTurn = true;
+		touchControls = GameObject.FindGameObjectWithTag("GameController").GetComponent<Touch>();
+	}
+
 	void Update() {
-		if (Input.GetKeyDown(KeyCode.W) && GameManager.playerTurn) {
-			MoveForward();
-			GameManager.playerTurn = false;
+		if (GameManager.playerTurn) {
+			if (Input.GetKeyDown(KeyCode.W) || touchControls.SwipeUp) {
+				MoveForward();
+			}
+			if (Input.GetKeyDown(KeyCode.S) || touchControls.SwipeDown) {
+				MoveBack();
+			}
+			if (Input.GetKeyDown(KeyCode.A) || touchControls.SwipeLeft) {
+				MoveLeft();
+			}
+			if (Input.GetKeyDown(KeyCode.D) || touchControls.SwipeRight) {
+				MoveRight();
+			}
 		}
-		if (Input.GetKeyDown(KeyCode.S) && GameManager.playerTurn) {
-			MoveBack();
-			GameManager.playerTurn = false;
-		}
-		if (Input.GetKeyDown(KeyCode.A) && GameManager.playerTurn) {
-			MoveLeft();
-			GameManager.playerTurn = false;
-		}
-		if (Input.GetKeyDown(KeyCode.D) && GameManager.playerTurn) {
-			MoveRight();
-			GameManager.playerTurn = false;
-		}
+	}
+
+	public void Die() {
+		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 }
