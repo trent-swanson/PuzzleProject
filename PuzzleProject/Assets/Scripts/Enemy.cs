@@ -8,6 +8,7 @@ public class Enemy : CharacterController {
 	RaycastHit hit;
 
 	void OnEnable() {
+		GameManager.enemyCount += 1;
 		GameManager.UpdateTurn += Attack;
 		fwd = transform.forward * 3f;
 	}
@@ -20,6 +21,8 @@ public class Enemy : CharacterController {
 		if (Physics.Raycast(transform.position, fwd, out hit, 3f)) {
 			if (hit.transform.tag == "Player") {
 				AttackPlayer(hit.transform.gameObject);
+			} else {
+				GameManager.ChangeTurn();
 			}
 		} else {
 			GameManager.ChangeTurn();

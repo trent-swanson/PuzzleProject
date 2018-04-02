@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour {
 
+	public bool cracked = false;
+	bool walkedOn = false;
+	bool broken = false;
 	public bool walkable;
 	public Vector3 tilePosition;
 	public GameObject occupyingObject;
@@ -13,6 +16,13 @@ public class Tile : MonoBehaviour {
 	void Start() {
 		walkable = true;
 		tilePosition = new Vector3 (transform.position.x, 1f, transform.position.z);
+
+		//cracked tile
+		if (cracked) {
+			Color mat = GetComponent<Renderer>().materials[2].color;
+			mat.a = 0.55f;
+			GetComponent<Renderer>().materials[2].color = mat;
+		}
 
 		RaycastHit hit;
 
@@ -50,6 +60,10 @@ public class Tile : MonoBehaviour {
 				occupyingObject = hit.transform.gameObject;
 				walkable = false;
 			}
+			if (hit.transform.tag == "Block") {
+				occupyingObject = hit.transform.gameObject;
+				occupyingObject.GetComponent<Block>().occupiedTile = this;
+			}
 			if (hit.transform.tag == "Player") {
 				occupyingObject = hit.transform.gameObject;
 				occupyingObject.GetComponent<Player>().occupiedTile = this;
@@ -73,5 +87,35 @@ public class Tile : MonoBehaviour {
 		Debug.DrawRay(transform.position, left, Color.blue);
 		Debug.DrawRay(transform.position, right, Color.black);
 		Debug.DrawRay(transform.position, up, Color.cyan);
+	}
+
+	public void UpdateCrackedTile() {
+		if (cracked && walkedOn) {
+			if (!broken) {
+				Color mat = GetComponent<Renderer>().materials[2].color;
+				mat.a = 1f;
+				GetComponent<Renderer>().materials[2].color = mat;
+				walkedOn = true;
+			} else {
+				Destroy(this.gameObject);
+			}
+		}
+	}
+
+	public void SetOccupyingObject(GameObject _gameObject) {
+		occupyingObject = _gameObject;
+		if (_gameObject != null) {
+			if (_gameObject.tag == "Player" && cracked) {
+				walkedOn = true;
+			}
+		} else {
+			if (walkedOn == true) {
+				broken = true;
+			}
+		}
+	}
+
+	public GameObject GetOccupyingObject() {
+		return occupyingObject;
 	}
 }

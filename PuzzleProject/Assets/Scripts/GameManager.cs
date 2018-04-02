@@ -11,6 +11,7 @@ public static class GameManager {
 	public static int currentLevel = 1;
 	public static int selectedLevel = 1;
 	public static bool playerTurn;
+	public static int enemyCount = 0;
 
 	public static void GoToNextLevel() {
 			currentLevel++;
@@ -18,7 +19,9 @@ public static class GameManager {
 	}
 
 	public static void ChangeTurn() {
-		playerTurn = !playerTurn;
+		if (enemyCount != 0)
+			playerTurn = !playerTurn;
+		
 		if (!playerTurn) {
 			if (UpdateTurn != null)
 				UpdateTurn();
