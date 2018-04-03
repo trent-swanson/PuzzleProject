@@ -19,9 +19,9 @@ public class Tile : MonoBehaviour {
 
 		//cracked tile
 		if (cracked) {
-			Color mat = GetComponent<Renderer>().materials[2].color;
+			Color mat = GetComponent<Renderer>().materials[1].color;
 			mat.a = 0.55f;
-			GetComponent<Renderer>().materials[2].color = mat;
+			GetComponent<Renderer>().materials[1].color = mat;
 		}
 
 		RaycastHit hit;
@@ -60,6 +60,9 @@ public class Tile : MonoBehaviour {
 				occupyingObject = hit.transform.gameObject;
 				walkable = false;
 			}
+			if (hit.transform.tag == "Objective") {
+				occupyingObject = hit.transform.gameObject;
+			}
 			if (hit.transform.tag == "Block") {
 				occupyingObject = hit.transform.gameObject;
 				occupyingObject.GetComponent<Block>().occupiedTile = this;
@@ -92,9 +95,9 @@ public class Tile : MonoBehaviour {
 	public void UpdateCrackedTile() {
 		if (cracked && walkedOn) {
 			if (!broken) {
-				Color mat = GetComponent<Renderer>().materials[2].color;
+				Color mat = GetComponent<Renderer>().materials[1].color;
 				mat.a = 1f;
-				GetComponent<Renderer>().materials[2].color = mat;
+				GetComponent<Renderer>().materials[1].color = mat;
 				walkedOn = true;
 			} else {
 				Destroy(this.gameObject);

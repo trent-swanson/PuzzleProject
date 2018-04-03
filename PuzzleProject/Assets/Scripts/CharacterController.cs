@@ -12,33 +12,48 @@ public class CharacterController : MonoBehaviour {
 	public bool isWalking = false;
 
 	Tile previousTile;
+	GameObject tempOccupyingObject;
 
-	public bool MoveForward() {
+	void ChangeOccupiedTile(Tile new_Tile) {
+		occupiedTile.SetOccupyingObject(null);
+		previousTile = occupiedTile;
+		Tile temp_Tile = new_Tile;
+		occupiedTile = temp_Tile;
+		occupiedTile.SetOccupyingObject(this.gameObject);
+	}
+
+	bool MoveBlock(Tile new_Tile) {
+		if (new_Tile == occupiedTile.frontTile) {
+			return new_Tile.occupyingObject.GetComponent<Block>().BlockMove(new_Tile.frontTile);
+		} else if (new_Tile == occupiedTile.backTile) {
+			return new_Tile.occupyingObject.GetComponent<Block>().BlockMove(new_Tile.backTile);
+		} else if (new_Tile == occupiedTile.leftTile) {
+			return new_Tile.occupyingObject.GetComponent<Block>().BlockMove(new_Tile.leftTile);
+		} else if (new_Tile == occupiedTile.rightTile) {
+			return new_Tile.occupyingObject.GetComponent<Block>().BlockMove(new_Tile.rightTile);
+		}
+		return false;
+	}
+
+	public bool Move(Tile newTile) {
 		if (transform.position == occupiedTile.tilePosition) {
 			isWalking = false;
-			if (occupiedTile.frontTile != null) {
-				if (occupiedTile.frontTile.walkable) {
-					if (occupiedTile.frontTile.occupyingObject != null) {
-						if (occupiedTile.frontTile.occupyingObject.tag == "Block") {
-							if (occupiedTile.frontTile.occupyingObject.GetComponent<Block>().BlockMoveForward() == true) {
-								occupiedTile.SetOccupyingObject(null);
-								previousTile = occupiedTile;
-								Tile temp_Tile = occupiedTile.frontTile;
-								occupiedTile = temp_Tile;
-								occupiedTile.SetOccupyingObject(this.gameObject);
-								StartCoroutine(MoveToPosition(this.transform, occupiedTile.tilePosition, moveSpeed));
-								return true;
-							}
-						}
-					} else {
-						occupiedTile.SetOccupyingObject(null);
-						previousTile = occupiedTile;
-						Tile tempTile = occupiedTile.frontTile;
-						occupiedTile = tempTile;
-						occupiedTile.SetOccupyingObject(this.gameObject);
+			if (newTile != null && newTile.walkable) {
+				if (newTile.occupyingObject != null && newTile.occupyingObject.tag == "Block") {
+					if (MoveBlock(newTile) == true) {
+						ChangeOccupiedTile(newTile);
 						StartCoroutine(MoveToPosition(this.transform, occupiedTile.tilePosition, moveSpeed));
 						return true;
 					}
+				} else if (newTile.occupyingObject != null && newTile.occupyingObject.tag == "Enemy") {
+					tempOccupyingObject = newTile.occupyingObject;
+					ChangeOccupiedTile(newTile);
+					StartCoroutine(MoveToPosition(this.transform, occupiedTile.tilePosition, moveSpeed, tempOccupyingObject, false));
+					return true;
+				} else {
+					ChangeOccupiedTile(newTile);
+					StartCoroutine(MoveToPosition(this.transform, occupiedTile.tilePosition, moveSpeed));
+					return true;
 				}
 			}
 		} else {
@@ -47,101 +62,16 @@ public class CharacterController : MonoBehaviour {
 		return false;
 	}
 
-	public bool MoveBack() {
+	public bool BlockMove(Tile newTile) {
 		if (transform.position == occupiedTile.tilePosition) {
 			isWalking = false;
-			if (occupiedTile.backTile != null) {
-				if (occupiedTile.backTile.walkable) {
-					if (occupiedTile.backTile.occupyingObject != null) {
-						if (occupiedTile.backTile.occupyingObject.tag == "Block") {
-							if (occupiedTile.backTile.occupyingObject.GetComponent<Block>().BlockMoveBack() == true) {
-								occupiedTile.SetOccupyingObject(null);
-								previousTile = occupiedTile;
-								Tile temp_Tile = occupiedTile.backTile;
-								occupiedTile = temp_Tile;
-								occupiedTile.SetOccupyingObject(this.gameObject);
-								StartCoroutine(MoveToPosition(this.transform, occupiedTile.tilePosition, moveSpeed));
-								return true;
-							}
-						}
-					} else {
-						occupiedTile.SetOccupyingObject(null);
-						previousTile = occupiedTile;
-						Tile tempTile = occupiedTile.backTile;
-						occupiedTile = tempTile;
-						occupiedTile.SetOccupyingObject(this.gameObject);
-						StartCoroutine(MoveToPosition(this.transform, occupiedTile.tilePosition, moveSpeed));
-						return true;
-					}
-				}
+			if (newTile != null && newTile.walkable && newTile.occupyingObject == null) {
+				ChangeOccupiedTile(newTile);
+					StartCoroutine(MoveToPosition(this.transform, occupiedTile.tilePosition, moveSpeed));
+					return true;
 			}
-		} else {
-			isWalking = true;
-		}
-		return false;
-	}
-
-	public bool MoveLeft() {
-		if (transform.position == occupiedTile.tilePosition) {
-			isWalking = false;
-			if (occupiedTile.leftTile != null) {
-				if (occupiedTile.leftTile.walkable) {
-					if (occupiedTile.leftTile.occupyingObject != null) {
-						if (occupiedTile.leftTile.occupyingObject.tag == "Block") {
-							if (occupiedTile.leftTile.occupyingObject.GetComponent<Block>().BlockMoveLeft() == true) {
-								occupiedTile.SetOccupyingObject(null);
-								previousTile = occupiedTile;
-								Tile temp_Tile = occupiedTile.leftTile;
-								occupiedTile = temp_Tile;
-								occupiedTile.SetOccupyingObject(this.gameObject);
-								StartCoroutine(MoveToPosition(this.transform, occupiedTile.tilePosition, moveSpeed));
-								return true;
-							}
-						}
-					} else {
-						occupiedTile.SetOccupyingObject(null);
-						previousTile = occupiedTile;
-						Tile tempTile = occupiedTile.leftTile;
-						occupiedTile = tempTile;
-						occupiedTile.SetOccupyingObject(this.gameObject);
-						StartCoroutine(MoveToPosition(this.transform, occupiedTile.tilePosition, moveSpeed));
-						return true;
-					}
-				}
-			}
-		} else {
-			isWalking = true;
-		}
-		return false;
-	}
-
-	public bool MoveRight() {
-		if (transform.position == occupiedTile.tilePosition) {
-			isWalking = false;
-			if (occupiedTile.rightTile != null) {
-				if (occupiedTile.rightTile.walkable) {
-					if (occupiedTile.rightTile.occupyingObject != null) {
-						if (occupiedTile.rightTile.occupyingObject.tag == "Block") {
-							if (occupiedTile.rightTile.occupyingObject.GetComponent<Block>().BlockMoveRight() == true) {
-								occupiedTile.SetOccupyingObject(null);
-								previousTile = occupiedTile;
-								Tile temp_Tile = occupiedTile.rightTile;
-								occupiedTile = temp_Tile;
-								occupiedTile.SetOccupyingObject(this.gameObject);
-								StartCoroutine(MoveToPosition(this.transform, occupiedTile.tilePosition, moveSpeed));
-								return true;
-							}
-						}
-					} else {
-						occupiedTile.SetOccupyingObject(null);
-						previousTile = occupiedTile;
-						Tile tempTile = occupiedTile.rightTile;
-						occupiedTile = tempTile;
-						occupiedTile.SetOccupyingObject(this.gameObject);
-						StartCoroutine(MoveToPosition(this.transform, occupiedTile.tilePosition, moveSpeed));
-						return true;
-					}
-				}
+			else {
+				return false;
 			}
 		} else {
 			isWalking = true;
@@ -152,7 +82,7 @@ public class CharacterController : MonoBehaviour {
 	public void AttackPlayer(GameObject player) {
 		occupiedTile.SetOccupyingObject(null);
 		previousTile = occupiedTile;
-		StartCoroutine(MoveToPosition(this.transform, player.transform.position, moveSpeed, player));
+		StartCoroutine(MoveToPosition(this.transform, player.transform.position, moveSpeed, player, true));
 	}
 
 	public IEnumerator MoveToPosition(Transform transform, Vector3 position, float timeToMove) {
@@ -170,7 +100,7 @@ public class CharacterController : MonoBehaviour {
 		}
     }
 
-	public IEnumerator MoveToPosition(Transform transform, Vector3 position, float timeToMove, GameObject player) {
+	public IEnumerator MoveToPosition(Transform transform, Vector3 position, float timeToMove, GameObject agentToDie, bool isPlayer) {
       	Vector3 currentPos = transform.position;
       	float t = 0f;
     	while (t < 1) {
@@ -179,7 +109,12 @@ public class CharacterController : MonoBehaviour {
 			if (t >= 1) {
 				occupiedTile.UpdateCrackedTile();
 				previousTile.UpdateCrackedTile();
-				player.GetComponent<Player>().Die();
+				if (isPlayer)
+					agentToDie.GetComponent<Player>().Die();
+				else
+					agentToDie.GetComponent<Enemy>().Die();
+				yield return new WaitForSeconds(0.01f);
+				GameManager.ChangeTurn();
 			}
             yield return null;
 		}

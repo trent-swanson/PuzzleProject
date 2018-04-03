@@ -12,8 +12,14 @@ EditorBuildSettings:
     path: Assets/Scenes/overworld.unity
     guid: b8d763638e6182845bd3ef5606022aae
   - enabled: 1
+    path: Assets/Scenes/level00.unity
+    guid: 7fbce2331758b2b4193c3237d0353bc2
+  - enabled: 1
     path: Assets/Scenes/level01.unity
-    guid: bfc66193048bfa44e929cbe71c596681
+    guid: 5baa6bdb779c348418020820c5cc618b
   - enabled: 1
     path: Assets/Scenes/level02.unity
-    guid: 1fd4758057d348d40bf6f6f67ed6ef95
+    guid: bfc66193048bfa44e929cbe71c596681
+  - enabled: 1
+    path: Assets/Scenes/level03.unity
+    guid: 3b002d59de72c3c4bbd9c9dcffd7e12b

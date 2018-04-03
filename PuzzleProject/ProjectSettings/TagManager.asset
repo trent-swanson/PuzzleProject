@@ -8,6 +8,7 @@ TagManager:
   - Obstacle
   - Enemy
   - Block
+  - Objective
   layers:
   - Default
   - TransparentFX
