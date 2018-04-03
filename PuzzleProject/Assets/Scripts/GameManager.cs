@@ -8,6 +8,7 @@ public static class GameManager {
 	//public delegate void UpdateTurnAction();
     //public static event UpdateTurnAction UpdateTurn;
 
+	
 	public static int currentLevel = 1;
 	public static int selectedLevel = 1;
 	public static bool playerTurn;

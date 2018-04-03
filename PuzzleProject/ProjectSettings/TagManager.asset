@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - Block
   - Objective
+  - Collectable
   layers:
   - Default
   - TransparentFX
