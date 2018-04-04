@@ -6,6 +6,13 @@ using UnityEngine.SceneManagement;
 public class Player : CharacterController {
 
 	Touch touchControls;
+	Objective objective;
+	int collectableCount;
+
+	void Awake() {
+		touchControls = GameObject.FindGameObjectWithTag("GameController").GetComponent<Touch>();
+		collectableCount = 0;
+	}
 
 	void OnEnable() {
 		GameManager.enemyList.Clear();
@@ -14,7 +21,13 @@ public class Player : CharacterController {
 	}
 
 	void Start() {
-		touchControls = GameObject.FindGameObjectWithTag("GameController").GetComponent<Touch>();
+		if (SceneManager.GetActiveScene().buildIndex > 1) {
+			objective = GameObject.FindGameObjectWithTag("Objective").GetComponent<Objective>();
+			collectableCount = GameObject.FindGameObjectsWithTag("Collectable").Length;
+			if (collectableCount <= 0) {
+				objective.Open();
+			}
+		}
 	}
 
 	void Update() {
@@ -35,6 +48,17 @@ public class Player : CharacterController {
 	}
 
 	public void Die() {
+		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+	}
+
+	public void UpdateCollectables() {
+		collectableCount--;
+		if (collectableCount <= 0) {
+			objective.Open();
+		}
+	}
+
+	public void RestartLevel() {
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 }

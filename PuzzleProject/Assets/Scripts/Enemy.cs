@@ -23,7 +23,6 @@ public class Enemy : CharacterController {
 	}
 
 	public void Attack() {
-		Debug.Log("Attack");
 		GameManager.enemyID++;
 		if (Physics.Raycast(transform.position, fwd, out hit, 3f)) {
 			if (hit.transform.tag == "Player") {
